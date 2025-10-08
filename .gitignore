@@ -1,1 +1,4 @@
 __pycache__/
+.venv/
+srd_ingest/srd.md
+shadowdark_tui/rules/manifest.json

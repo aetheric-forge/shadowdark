@@ -1,0 +1,60 @@
+{
+  "defaults": {
+    "prefix": "SD",
+    "source": "Shadowdark SRD (table summary)",
+    "version": 1,
+    "phase": "roll",
+    "priority": 100,
+    "category": "mechanics",
+    "tags": []
+  },
+  "rules": [
+    {
+      "match": "(?i)advantage|disadvantage",
+      "category": "mechanics",
+      "phase": "roll",
+      "priority": 100,
+      "tags": [
+        "advantage",
+        "disadvantage",
+        "d20"
+      ],
+      "id_hint": "ADV"
+    },
+    {
+      "match": "(?i)critical|fumble|natural 20|natural one",
+      "category": "mechanics",
+      "phase": "post",
+      "priority": 50,
+      "tags": [
+        "critical",
+        "fumble",
+        "d20"
+      ],
+      "id_hint": "CRIT"
+    },
+    {
+      "match": "(?i)light|dark|dim",
+      "category": "conditions",
+      "phase": "pre",
+      "priority": 10,
+      "tags": [
+        "light",
+        "visibility"
+      ],
+      "id_hint": "LIGHT"
+    },
+    {
+      "match": "(?i)initiative|surprise",
+      "category": "mechanics",
+      "phase": "roll",
+      "priority": 80,
+      "tags": [
+        "initiative",
+        "surprise",
+        "order"
+      ],
+      "id_hint": "INIT"
+    }
+  ]
+}
