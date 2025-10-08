@@ -1,5 +1,3 @@
-# shadowdark_tui/app.py (fix compose + ids)
-
 from __future__ import annotations
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
@@ -14,6 +12,7 @@ from .ui.screens import (
 )
 from .storage import GameStore
 from .rulesets.shadowdark import ShadowdarkRuleset
+from .ui.messages import CharacterSelected, AbilityRolled
 
 
 class ShadowdarkApp(App):
@@ -37,7 +36,6 @@ class ShadowdarkApp(App):
             Tab("GM Log", id="log"),
             id="tabs",
         )
-        # give the middle row an id so the CSS can target it
         with Horizontal(id="content"):
             yield PartyScreen(id="party_screen")
             with Vertical(id="main-panel"):
@@ -48,13 +46,12 @@ class ShadowdarkApp(App):
         yield Footer()
 
     def on_mount(self) -> None:
-        # show Character by default
         self.show_only("char_screen")
 
     def on_tabs_tab_activated(self, event: Tabs.TabActivated) -> None:
         tid = event.tab.id
         mapping = {
-            "party": "char_screen",  # keep left pane (party) always visible; main panel swaps
+            "party": "char_screen",
             "char": "char_screen",
             "init": "init_screen",
             "dice": "dice_screen",
@@ -63,11 +60,26 @@ class ShadowdarkApp(App):
         self.show_only(mapping.get(tid, "char_screen"))
 
     def show_only(self, widget_id: str):
-        # Toggle only the main-panel children
         for wid in ("char_screen", "init_screen", "dice_screen", "log_screen"):
             self.query_one(f"#{wid}").display = wid == widget_id
 
+    # Character selection -> populate character sheet & switch to Character
     def on_character_selected(self, msg: CharacterSelected) -> None:
         sheet = self.query_one("#char_screen", expect_type=CharacterScreen)
         sheet.set_character(msg.character, self.ruleset)
-        # self.query_one("#tabs").active = "char"  # uncomment if you want auto-swap
+        tabs = self.query_one("#tabs", expect_type=Tabs)
+        tabs.active = "char"
+        self.show_only("char_screen")
+        # put focus on the sheet for hotkeys
+        sheet.focus()
+
+    # Ability rolled -> show in Dice tab and notify
+    def on_ability_rolled(self, msg: AbilityRolled) -> None:
+        dice = self.query_one("#dice_screen", expect_type=DiceScreen)
+        dice.show(
+            f"{msg.character_name} {msg.ability} check => **{msg.total}**  {msg.detail}"
+        )
+        tabs = self.query_one("#tabs", expect_type=Tabs)
+        tabs.active = "dice"
+        self.show_only("dice_screen")
+        self.notify(f"{msg.character_name} {msg.ability} ⇒ {msg.total}")
