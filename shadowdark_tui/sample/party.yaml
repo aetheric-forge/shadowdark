@@ -1,0 +1,22 @@
+party:
+- name: Sylas
+  class: Thief
+  level: 2
+  hp: 9
+  ac: 13
+  stats: {str: 9, dex: 16, con: 12, int: 13, wis: 10, cha: 11}
+  inventory: [dagger, thieves' tools, cloak]
+- name: Elira
+  class: Wizard
+  level: 2
+  hp: 6
+  ac: 11
+  stats: {str: 8, dex: 12, con: 10, int: 17, wis: 12, cha: 10}
+  inventory: [staff, spellbook]
+- name: Jonas
+  class: Cleric
+  level: 2
+  hp: 10
+  ac: 14
+  stats: {str: 12, dex: 10, con: 14, int: 9, wis: 16, cha: 12}
+  inventory: [mace, holy symbol]
